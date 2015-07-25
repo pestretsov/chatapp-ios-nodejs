@@ -7,6 +7,8 @@
 //
 
 #import "AppDelegate.h"
+#include "ViewController.h"
+#include "ChatController.h"
 
 @interface AppDelegate ()
 
@@ -16,7 +18,15 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window.backgroundColor = [UIColor whiteColor];
+    
+    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:[ChatController new]];
+    [self.window makeKeyAndVisible];
+    
+    return YES;
+    
     return YES;
 }
 
