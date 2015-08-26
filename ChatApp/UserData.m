@@ -10,10 +10,16 @@
 
 @implementation UserData
 
-- (id)initWithUserId:(NSString *)userId name:(NSString *)name image:(NSString *)image {
+- (id)initWithDictionary:(NSDictionary *)dictionary {
+ 
+    _userId = [dictionary objectForKey:@"id"];
+    _thumbnailUrl = [NSURL URLWithString:[dictionary objectForKey:@"image"]];
+    _username = [dictionary objectForKey:@"username"];
+    _name = [dictionary objectForKey:@"name"];
     
-    _data = [[NSDictionary alloc] initWithObjects:@[userId, name, image] forKeys:@[@"id", @"name", @"image"]];
+    _data = [[NSDictionary alloc] initWithObjects:@[_userId, _name, [dictionary objectForKey:@"image"], _username] forKeys:@[@"id", @"name", @"image", @"username"]];
     
     return self;
 }
+
 @end

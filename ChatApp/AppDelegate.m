@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#include "ViewController.h"
+#include "AuthController.h"
 #include "ChatController.h"
 
 @interface AppDelegate ()
@@ -21,11 +21,13 @@
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
+
+    // login screen is implemented via storyboard, so we load it first
+    UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]] ;
+    AuthController *secondViewController = [storyBoard instantiateViewControllerWithIdentifier:@"AuthController"];
     
-    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:[ChatController new]];
+    self.window.rootViewController = secondViewController;
     [self.window makeKeyAndVisible];
-    
-    return YES;
     
     return YES;
 }

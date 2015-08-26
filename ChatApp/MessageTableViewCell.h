@@ -17,6 +17,7 @@ static CGFloat kMessageTableViewCellAvatarHeight = 30.0;
 @property (nonatomic, strong) UILabel *usernameLabel;
 @property (nonatomic, strong) UILabel *bodyLabel;
 @property (nonatomic, strong) UIImageView *thumbnailView;
+@property (nonatomic, strong) UILabel *timestamp;
 
 @property (nonatomic, strong) NSIndexPath *indexPath;
 

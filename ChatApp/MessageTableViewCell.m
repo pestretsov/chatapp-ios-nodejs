@@ -7,6 +7,7 @@
 //
 
 #import "MessageTableViewCell.h"
+#import "UIImage+RoundedCorner.h"
 
 @implementation MessageTableViewCell
 
@@ -27,10 +28,12 @@
     [self.contentView addSubview:self.usernameLabel];
     [self.contentView addSubview:self.bodyLabel];
     [self.contentView addSubview:self.thumbnailView];
+    [self.contentView addSubview:self.timestamp];
     
     NSDictionary *views = @{@"thumbnailView": self.thumbnailView,
                             @"usernameLabel": self.usernameLabel,
                             @"bodyLabel": self.bodyLabel,
+                            @"timestamp": self.timestamp,
                             };
     
     NSDictionary *metrics = @{@"thumbSize": @(kMessageTableViewCellAvatarHeight),
@@ -39,13 +42,15 @@
                               @"left": @5,
                               };
     
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-left-[thumbnailView(thumbSize)]-right-[usernameLabel(>=0)]-right-|" options:kNilOptions metrics:metrics views:views]];
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-left-[thumbnailView(thumbSize)]-left-[usernameLabel(>=0)]-right-[timestamp(>=0)]-(>=0)-|" options:kNilOptions metrics:metrics views:views]];
     
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-left-[thumbnailView(thumbSize)]-right-[bodyLabel(>=0)]-right-|" options:kNilOptions metrics:metrics views:views]];
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-left-[thumbnailView(thumbSize)]-left-[bodyLabel(>=0)]-right-|" options:kNilOptions metrics:metrics views:views]];
     
     [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-right-[thumbnailView(thumbSize)]-(>=0)-|" options:kNilOptions metrics:metrics views:views]];
     
     [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-right-[usernameLabel]-left-[bodyLabel(>=0)]-left-|" options:kNilOptions metrics:metrics views:views]];
+    
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-right-[timestamp]-left-[bodyLabel(>=0)]-left-|" options:kNilOptions metrics:metrics views:views]];
 }
 
 // only change attributes here..dont touch content
@@ -55,6 +60,9 @@
     self.usernameLabel.font = [UIFont boldSystemFontOfSize:16.0];
     self.usernameLabel.textColor = [UIColor blackColor];
     self.bodyLabel.font = [UIFont systemFontOfSize:16.0];
+    self.bodyLabel.textColor = [UIColor darkGrayColor];
+    self.timestamp.font = [UIFont systemFontOfSize:16.0];
+    self.timestamp.textColor = [UIColor lightGrayColor];
 }
 
 - (UILabel *)usernameLabel {
@@ -63,7 +71,7 @@
         _usernameLabel.translatesAutoresizingMaskIntoConstraints = NO;
         _usernameLabel.backgroundColor = [UIColor clearColor];
         _usernameLabel.userInteractionEnabled = NO;
-        _usernameLabel.numberOfLines = 0;
+        _usernameLabel.numberOfLines = 1;
         
         _usernameLabel.font = [UIFont boldSystemFontOfSize:16.0];
         _usernameLabel.textColor = [UIColor blackColor];
@@ -82,7 +90,7 @@
         _bodyLabel.numberOfLines = 0;
         _bodyLabel.lineBreakMode = NSLineBreakByWordWrapping;
         _bodyLabel.font = [UIFont systemFontOfSize:16.0];
-        _bodyLabel.textColor = [UIColor grayColor];
+        _bodyLabel.textColor = [UIColor darkGrayColor];
     }
     
     return _bodyLabel;
@@ -93,14 +101,25 @@
         _thumbnailView = [UIImageView new];
         _thumbnailView.translatesAutoresizingMaskIntoConstraints = NO;
         _thumbnailView.userInteractionEnabled = NO;
-        _thumbnailView.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0];
-        
-        // DONT EVEN TRY!!!
-        //_thumbnailView.layer.cornerRadius = kMessageTableViewCellAvatarHeight/2.0;
-        _thumbnailView.layer.masksToBounds = YES;
+        _thumbnailView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:1.0];
     }
+
     
     return _thumbnailView;
+}
+
+- (UILabel *)timestamp {
+    if (!_timestamp) {
+        _timestamp = [[UILabel alloc] init];
+        _timestamp.translatesAutoresizingMaskIntoConstraints = NO;
+        _timestamp.backgroundColor = [UIColor clearColor];
+        _timestamp.userInteractionEnabled = NO;
+        _timestamp.numberOfLines = 1;
+        _timestamp.font = [UIFont systemFontOfSize:16.0];
+        _timestamp.textColor = [UIColor lightGrayColor];
+    }
+    
+    return _timestamp;
 }
 
 

@@ -11,11 +11,22 @@
 @implementation Message
 
 - (id)initWithDictionary:(NSDictionary *)dictionary {
+    
+    _isHistory = [dictionary objectForKey:@"history"];
     _messageId = [dictionary objectForKey:@"id"];
-    _user = [dictionary objectForKey:@"user"];
+    _user = [[UserData alloc] initWithDictionary:[dictionary objectForKey:@"user"]];
     _message = [dictionary objectForKey:@"message"];
-    _timestamp = [dictionary objectForKey:@"timestamp"];
-    _mentions = [dictionary objectForKey:@"mentions"];
+
+    NSString * tempTimestamp = [dictionary objectForKey:@"timestamp"];
+    
+    NSTimeInterval timeInterval = [tempTimestamp doubleValue];
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeInterval];
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"HH:mm"];
+    _timestamp = [dateFormatter stringFromDate:date];
+    
+    _mentions = [dictionary objectForKey:@"mentions"]; // array of dictionaries
     
     return self;
 }

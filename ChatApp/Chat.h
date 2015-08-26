@@ -12,11 +12,13 @@
 
 @class Chat;
 
-#pragma mark - SRWebSocketDelegate
-
 @protocol ChatDelegate <NSObject>
 
 - (void)didReceiveMessage:(Message *)message;
+- (void)updateUserList:(UserData *)userData action:(NSString *)action;
+// FIX
+// create event class (dont use string)
+- (void)didReceiveEvent:(NSString *)event;
 
 @optional
 
@@ -25,9 +27,9 @@
 @interface Chat : NSObject
 
 @property (nonatomic, weak) id <ChatDelegate> delegate;
-@property (nonatomic, strong) NSMutableArray *messagesList;
 
 - (id)initWithSocket:(SocketIOClient *)socket;
 - (void)sendMessage:(SocketIOClient *)socket message:(Message *)message;
+- (NSString *)parseMentions:(Message *)message;
 
 @end

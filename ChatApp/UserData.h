@@ -7,13 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Chat.h"
 
 @interface UserData : NSObject
 
 @property (nonatomic, strong) NSDictionary *data;
+@property (nonatomic, strong) NSString *userId;
+@property (nonatomic, strong) NSString *username;
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSURL *thumbnailUrl;
 
-@property (strong, nonatomic) Chat *chat;
-- (id)initWithUserId:(NSString *)userId name:(NSString *)name image:(NSString *)image;
+- (id)initWithDictionary:(NSDictionary *)dictionary;
 
 @end

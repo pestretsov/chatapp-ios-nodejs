@@ -1,14 +1,14 @@
 //
-//  ViewController.h
+//  AuthController.h
 //  test
 //
-//  Created by Artemy Pestretsov on 7/13/15.
+//  Created by Artemy Pestretsov on 7/28/15.
 //  Copyright (c) 2015 Artemy Pestretsov. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface AuthController : UIViewController
 
 
 @end
