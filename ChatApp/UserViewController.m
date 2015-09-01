@@ -10,8 +10,6 @@
 
 @interface UserViewController ()
 
-@property UITableView 
-
 @end
 
 @implementation UserViewController

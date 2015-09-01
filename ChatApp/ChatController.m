@@ -22,7 +22,7 @@ static NSString *MessengerCellIdentifier = @"MessengerCell";
 static NSString *AutoCompletionCellIdentifier = @"AutoCompletionCell";
 static NSInteger countParticipants = 0;
 
-@interface ChatController () <ChatDelegate>
+@interface ChatController ()
 
 @property (strong, nonatomic) Chat *chat;
 @property (strong, nonatomic) NSMutableArray *messages;
@@ -77,11 +77,14 @@ static NSInteger countParticipants = 0;
     
     [self.tableView addGestureRecognizer:tap];
     
-    self.chat = [[Chat alloc] initWithSocket:self.socket];
-    self.chat.delegate = self;
+//    self.chat = [[Chat alloc] initWithSocket:self.socket];
+ //   self.chat.delegate = self;
     self.lastMentionedId = @"0";
     
-    [self continueHandshake];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(banned:) name:ClientDidReceiveBanNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveMessage:) name:ClientDidReceiveNewMessageNotification object:nil];
+    
+//    [self continueHandshake];
     
     // FIX
     // not implemented yet
@@ -114,6 +117,15 @@ static NSInteger countParticipants = 0;
     [super textWillUpdate];
 }
 
+- (void)banned:(NSNotification *) notification {
+    UIAlertView *theAlert = [[UIAlertView alloc] initWithTitle:@"Banned"
+                                                       message:@"You have been banned for %@ seconds"
+                                                      delegate:self
+                                             cancelButtonTitle:@"OK"
+                                             otherButtonTitles:nil];
+    [theAlert show];
+}
+
 - (void)textDidUpdate:(BOOL)animated {
     [super textDidUpdate:animated];
 }
@@ -136,11 +148,10 @@ static NSInteger countParticipants = 0;
     Message *message = [[Message alloc] init];
     
     message.message = [self.textView.text copy];
-    message.user = self.userMe;
     // not messageId, but replyId
     message.messageId = _lastMentionedId;
     
-    [self.chat sendMessage:self.socket message:message];
+    [[Chat sharedClient] sendMessage:message];
     
     self.lastMentionedId = @"0";
     [super didPressRightButton:sender];
@@ -175,27 +186,27 @@ static NSInteger countParticipants = 0;
     
     Message *message = self.messages[indexPath.row];
     
-    NSString *mentionString = [self.chat parseMentions:message];
+    //NSString *mentionString = [self.chat parseMentions:message];
     
     cell.usernameLabel.text = message.user.username;
     cell.bodyLabel.text = message.message;
     cell.timestamp.text = message.timestamp;
     
-    if ([mentionString length]) {
-        NSDictionary *attrs = @{
-                                NSFontAttributeName:[UIFont boldSystemFontOfSize:16.0],
-                                NSForegroundColorAttributeName:[UIColor colorWithRed:0.36 green:0.58 blue:0.76 alpha:1.0]
-                                };
-        NSDictionary *subAttrs = @{
-                                   NSFontAttributeName:[UIFont systemFontOfSize:16.0]
-                                   };
-        NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:cell.bodyLabel.text                                       attributes:subAttrs];
-
-        NSRange range = NSMakeRange(0, [mentionString length]);
-        [attributedText setAttributes:attrs range:range];
-        
-        [cell.bodyLabel setAttributedText:attributedText];
-    }
+//    if ([mentionString length]) {
+//        NSDictionary *attrs = @{
+//                                NSFontAttributeName:[UIFont boldSystemFontOfSize:16.0],
+//                                NSForegroundColorAttributeName:[UIColor colorWithRed:0.36 green:0.58 blue:0.76 alpha:1.0]
+//                                };
+//        NSDictionary *subAttrs = @{
+//                                   NSFontAttributeName:[UIFont systemFontOfSize:16.0]
+//                                   };
+//        NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:cell.bodyLabel.text                                       attributes:subAttrs];
+//
+//        NSRange range = NSMakeRange(0, [mentionString length]);
+//        [attributedText setAttributes:attrs range:range];
+//        
+//        [cell.bodyLabel setAttributedText:attributedText];
+//    }
     
     // FIX
     // provide a way to upload custom image
@@ -283,16 +294,20 @@ static NSInteger countParticipants = 0;
 
 #pragma mark - ChatDelegate
 
--(void)didReceiveMessage:(Message *)message {
+-(void)didReceiveMessage:(NSNotification *)notification {
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     UITableViewRowAnimation rowAnimation = UITableViewRowAnimationBottom;
+
+    NSDictionary *userInfo = [notification userInfo];
+    Message *message = [[Message alloc] initWithDictionary:userInfo];
     
     [self.tableView beginUpdates];
     [self.messages insertObject:message atIndex:0];
     [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:rowAnimation];
     [self.tableView endUpdates];
+    
+    NSLog(@"HERE");
 }
-
 
 - (void)mentionUser:(UILongPressGestureRecognizer *)gestureRecognizer {
     if (gestureRecognizer.state != UIGestureRecognizerStateBegan) {
@@ -334,34 +349,11 @@ static NSInteger countParticipants = 0;
     }
 }
 
-// FIX
-// rework
-- (void)didReceiveEvent:(NSString *)event {
-    if ([event isEqual:@"banned"]) {
-        UIAlertView *theAlert = [[UIAlertView alloc] initWithTitle:@"Banned"
-                                                           message:@"You have been banned for %@ seconds"
-                                                          delegate:self
-                                                 cancelButtonTitle:@"OK"
-                                                 otherButtonTitles:nil];
-        [theAlert show];
-    }
-}
-
-- (void)continueHandshake {
-    [_socket on:@"login" callback:^(NSArray *data, void (^ack)(NSArray *)) {
-        
-        if ([[data[0] objectForKey:@"users"] isKindOfClass:[NSDictionary class]]) {
-            NSDictionary *users = [[NSDictionary alloc] initWithDictionary:[data[0] objectForKey:@"users"]];
-            for (id key in users) {
-                UserData *existingUser = [[UserData alloc] initWithDictionary:[users objectForKey:key]];
-                
-                [self updateUserList:existingUser action:@"add"];
-            }
-        }
-    }];
-    
-    [_socket connect];
-}
+//- (void)continueHandshake {
+//
+//    
+//    [_socket connect];
+//}
 
 #pragma mark - AutoCompletionView Methods
 
@@ -429,5 +421,8 @@ static NSInteger countParticipants = 0;
     return [super textView:textView shouldChangeTextInRange:range replacementText:text];
 }
 
+-(void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 @end

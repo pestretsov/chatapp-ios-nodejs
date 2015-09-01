@@ -23,10 +23,12 @@
     self.window.backgroundColor = [UIColor whiteColor];
 
     // login screen is implemented via storyboard, so we load it first
-    UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]] ;
-    AuthController *secondViewController = [storyBoard instantiateViewControllerWithIdentifier:@"AuthController"];
+//    UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]] ;
+//    AuthController *secondViewController = [storyBoard instantiateViewControllerWithIdentifier:@"AuthController"];
+  
+    AuthController *authController = [[AuthController alloc] init];
     
-    self.window.rootViewController = secondViewController;
+    self.window.rootViewController = authController;
     [self.window makeKeyAndVisible];
     
     return YES;

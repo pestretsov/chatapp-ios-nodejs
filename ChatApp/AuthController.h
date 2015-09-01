@@ -10,6 +10,5 @@
 
 @interface AuthController : UIViewController
 
-
 @end
 

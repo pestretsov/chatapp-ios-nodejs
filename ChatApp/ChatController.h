@@ -14,7 +14,4 @@
 
 @interface ChatController : SLKTextViewController
 
-@property (strong, nonatomic) SocketIOClient *socket;
-@property (strong, nonatomic) UserData *userMe;
-
 @end

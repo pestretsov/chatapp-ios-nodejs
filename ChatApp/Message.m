@@ -11,6 +11,7 @@
 @implementation Message
 
 - (id)initWithDictionary:(NSDictionary *)dictionary {
+    _dict = dictionary;
     
     _isHistory = [dictionary objectForKey:@"history"];
     _messageId = [dictionary objectForKey:@"id"];

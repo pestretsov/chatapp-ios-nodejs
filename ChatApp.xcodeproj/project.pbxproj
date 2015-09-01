@@ -21,7 +21,6 @@
 		779351131B61A98E0062CF8D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 779351121B61A98E0062CF8D /* main.m */; };
 		779351161B61A98E0062CF8D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 779351151B61A98E0062CF8D /* AppDelegate.m */; };
 		779351191B61A98E0062CF8D /* AuthController.m in Sources */ = {isa = PBXBuildFile; fileRef = 779351181B61A98E0062CF8D /* AuthController.m */; };
-		7793511C1B61A98E0062CF8D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7793511A1B61A98E0062CF8D /* Main.storyboard */; };
 		7793511E1B61A98E0062CF8D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7793511D1B61A98E0062CF8D /* Images.xcassets */; };
 		779351211B61A98E0062CF8D /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7793511F1B61A98E0062CF8D /* LaunchScreen.xib */; };
 		7793512D1B61A98E0062CF8D /* ChatAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7793512C1B61A98E0062CF8D /* ChatAppTests.m */; };
@@ -67,7 +66,6 @@
 		779351151B61A98E0062CF8D /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		779351171B61A98E0062CF8D /* AuthController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AuthController.h; sourceTree = "<group>"; };
 		779351181B61A98E0062CF8D /* AuthController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AuthController.m; sourceTree = "<group>"; };
-		7793511B1B61A98E0062CF8D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7793511D1B61A98E0062CF8D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		779351201B61A98E0062CF8D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		779351261B61A98E0062CF8D /* ChatAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChatAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -134,7 +132,6 @@
 				779ADC251B6863C900AA8175 /* Model */,
 				778CEF4E1B61AC4B00837E5F /* Chat.h */,
 				778CEF4F1B61AC4B00837E5F /* Chat.m */,
-				7793511A1B61A98E0062CF8D /* Main.storyboard */,
 				7793511D1B61A98E0062CF8D /* Images.xcassets */,
 				7793511F1B61A98E0062CF8D /* LaunchScreen.xib */,
 				779351101B61A98D0062CF8D /* Supporting Files */,
@@ -285,7 +282,7 @@
 		779351051B61A98D0062CF8D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0640;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Artemy Pestretsov";
 				TargetAttributes = {
 					7793510C1B61A98D0062CF8D = {
@@ -321,7 +318,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7793511C1B61A98E0062CF8D /* Main.storyboard in Resources */,
 				779351211B61A98E0062CF8D /* LaunchScreen.xib in Resources */,
 				7707A9ED1B66445400A3BD2F /* Media.xcassets in Resources */,
 				7793511E1B61A98E0062CF8D /* Images.xcassets in Resources */,
@@ -427,14 +423,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		7793511A1B61A98E0062CF8D /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				7793511B1B61A98E0062CF8D /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		7793511F1B61A98E0062CF8D /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -467,6 +455,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -482,7 +471,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -520,7 +509,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -534,7 +523,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = ChatApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -545,7 +536,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = ChatApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -563,7 +556,9 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = ChatAppTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ChatApp.app/ChatApp";
 			};
@@ -578,7 +573,9 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = ChatAppTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ChatApp.app/ChatApp";
 			};

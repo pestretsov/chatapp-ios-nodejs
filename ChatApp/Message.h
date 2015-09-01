@@ -20,4 +20,6 @@
 @property (nonatomic, strong) NSArray *mentions;
 @property BOOL isHistory;
 
+@property (nonatomic, strong) NSDictionary *dict;
+
 @end

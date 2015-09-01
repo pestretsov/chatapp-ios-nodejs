@@ -17,47 +17,51 @@
 
 @interface AuthController () <UITextFieldDelegate>
 
-@property (strong, nonatomic) Chat *chat;
-@property (strong, nonatomic) UserData *userMe;
-
-@property (weak, nonatomic) IBOutlet UIImageView *LogoImageView;
-@property (weak, nonatomic) IBOutlet UITextField *loginTextView;
-@property (strong, nonatomic) SocketIOClient *socket;
-
-@property CGFloat kHeight;
+@property (strong, nonatomic) UITextField *usernameTextField;
+@property (strong, nonatomic) UIImageView *usernameImageView;
+@property (strong, nonatomic) UIView *usernameTextFieldSeparator;
+@property (strong, nonatomic) UIImageView *tjLogoImageView;
 
 @end
 
 @implementation AuthController
 
-static NSString *port = @"localhost:3000";
-static NSString *salt = @"salt";
-
 #pragma mark - View lifecycle
+
+- (void)loadView {
+    [super loadView];
+    
+    self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.view.backgroundColor = [UIColor whiteColor];
+    
+    UITraitCollection *traitCollection = self.view.traitCollection;
+    
+    self.usernameImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10,200,30,30)];
+    [self.usernameImageView setImage:[UIImage imageNamed:@"tj-logo-colored"]];
+    [self.view addSubview:self.usernameImageView];
+    
+    self.usernameTextField = [[UITextField alloc] initWithFrame:CGRectMake(self.usernameImageView.frame.origin.x + self.usernameImageView.frame.size.width+10, self.usernameImageView.frame.origin.y, 200, self.usernameImageView.frame.size.height)];
+    self.usernameTextField.keyboardType = UIKeyboardTypeDefault;
+    self.usernameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    self.usernameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+    self.usernameTextField.placeholder = @"username";
+    self.usernameTextField.delegate = self;
+    [self.view addSubview:self.usernameTextField];
+  
+    self.usernameTextFieldSeparator = [[UIView alloc] initWithFrame:CGRectMake(self.usernameTextField.frame.origin.x, self.usernameImageView.frame.origin.y + self.usernameTextField.frame.size.height, self.view.frame.size.width-20, 1)];
+    self.usernameTextFieldSeparator.backgroundColor = [UIColor colorWithRed:0.133f green:0.067f blue:0.024f alpha:1.0f];
+    [self.view addSubview:self.usernameTextFieldSeparator];
+    
+    NSLog(@"loadView");
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     [[self navigationController] setNavigationBarHidden:YES animated:YES];
-    
-    _loginTextView.delegate = self;
-    // sorry for that:)
-    _LogoImageView.image = [UIImage imageNamed:@"tj-logo-colored"];
-    
-    
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
-                                   initWithTarget:self
-                                   action:@selector(dismissKeyboard:)];
-    
-    [self.view addGestureRecognizer:tap];
-    [self.loginTextView becomeFirstResponder];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:@"UIKeyboardWillShowNotification" object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:@"UIKeyboardWillHideNotification" object: nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -66,21 +70,24 @@ static NSString *salt = @"salt";
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (void)viewDidLayoutSubviews {
+    if (!self.usernameTextField.isFirstResponder) {
+        [self.usernameTextField becomeFirstResponder];
+    }
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - Keyboard events
+#pragma mark - UITextFieldDelegate Methods
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    if (self.loginTextView == textField && [textField.text length]) {
+    if (self.usernameTextField == textField && [textField.text length]) {
         
         [self startHandshake:textField.text];
         ChatController *chatController = [[ChatController alloc] init];
-
-        chatController.socket = self.socket;
-        chatController.userMe = self.userMe;
         
         UINavigationController *navigationController =
         [[UINavigationController alloc] initWithRootViewController:chatController];
@@ -92,37 +99,6 @@ static NSString *salt = @"salt";
     }
     
     return YES;
-}
-
-- (void)dismissKeyboard:(BOOL)animated {
-    [self.loginTextView resignFirstResponder];
-}
-
-// FIX
-// fix bug with hardware keyboard
-- (void)keyboardWillShow:(NSNotification *)notification {
-    NSDictionary * userInfo = notification.userInfo;
-    if (userInfo) {
-        CGRect keyboardSize = [userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue];
-        
-        // FIX
-        // shouldnt be hardcoded
-        _kHeight = keyboardSize.size.height/2;
-
-        [self animateTextField:TRUE];
-    }
-}
-
-- (void)keyboardWillHide:(NSNotification *)notification {
-    [self animateTextField:FALSE];
-}
-
-- (void)animateTextField:(BOOL)up {
-    NSInteger movement = (up ? -self.kHeight : self.kHeight);
-
-    [UIView animateWithDuration:0.3 animations:^{
-        self.view.frame = CGRectOffset(self.view.frame, 0, movement);
-    }];
 }
 
 #pragma mark - ChatAppLogic Methods
@@ -138,22 +114,9 @@ static NSString *salt = @"salt";
                                };
     
     UserData *userData = [[UserData alloc] initWithDictionary:userInfo];
-    _userMe = userData;
     LoginData *loginData = [[LoginData alloc] initWithUserData:userData];
-    
-    _socket = [[SocketIOClient alloc] initWithSocketURL:port options:nil];
-    
-    [_socket on:@"connect" callback:^(NSArray* data, void (^ack)(NSArray*)) {
-        NSLog(@"Socket connected");
-        
-        [_socket emit:@"authentication" withItems:@[loginData.data]];
-    }];
-    
-    [_socket on:@"authenticated" callback:^(NSArray *data, void (^ack)(NSArray *)) {
-        [_socket emit:@"add user" withItems:@[@{@"room":loginData.room, @"roomHash":loginData.roomHash, @"socket": [_socket sid]}]];
-    }];
-    
-    [_socket connect];
+
+    [[Chat sharedClient] authenticateWithLoginData:loginData];
 }
 
 - (NSInteger)generateRandomFrom:(NSInteger)from to:(NSInteger)to {
