@@ -6,6 +6,10 @@
 //  Copyright © 2015 Artemy Pestretsov. All rights reserved.
 //
 
+#import <Socket_IO_Client_Swift/Socket_IO_Client_Swift-Swift.h>
+#import <SDWebImage/UIImageView+WebCache.h>
+#import <JSQMessagesViewController/JSQMessages.h>
+
 #import "ChatController.h"
 #import "AuthController.h"
 #import "MessageTextView.h"
@@ -15,8 +19,6 @@
 #import "NSString+MD5.h"
 #import "UserData.h"
 #import "LoginData.h"
-#import <Socket_IO_Client_Swift/Socket_IO_Client_Swift-Swift.h>
-#import <SDWebImage/UIImageView+WebCache.h>
 
 static NSString *MessengerCellIdentifier = @"MessengerCell";
 static NSString *AutoCompletionCellIdentifier = @"AutoCompletionCell";
@@ -88,10 +90,10 @@ static NSInteger countParticipants = 0;
     
     // FIX
     // not implemented yet
-    self.navigationItem.title = [NSString stringWithFormat:@"%ld users online", countParticipants];
-//    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Settings" style:UIBarButtonItemStylePlain target:self action:nil];
-//    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Users" style:UIBarButtonItemStylePlain target:self action:nil];
-//    
+    self.navigationItem.title = [NSString stringWithFormat:@"%ld online", countParticipants];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Settings" style:UIBarButtonItemStylePlain target:self action:nil];
+//    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:self action:nil];
+
     [self.autoCompletionView registerClass:[MessageTableViewCell class] forCellReuseIdentifier:AutoCompletionCellIdentifier];
     
     // enter @ in textfield to show additional menu

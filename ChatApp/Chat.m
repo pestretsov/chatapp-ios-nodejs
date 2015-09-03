@@ -157,7 +157,6 @@ NSString * const ClientDidReceiveAccessDeniedNotification = @"ClientDidReceiveAc
 //        addCommandResponse(data);
     }];
     
-    
     [socket on:@"reconnecting" callback:^(NSArray* data, void (^ack)(NSArray*)) {
         _connectionStatus = StatusCONNECTING;
     }];

@@ -13,6 +13,8 @@
 #import "UserData.h"
 #import "Chat.h"
 #import "LoginData.h"
+#import "Reachability.h"
+#import "MainTabBarViewController.h"
 #import <Socket_IO_Client_Swift/Socket_IO_Client_Swift-Swift.h>
 
 @interface AuthController () <UITextFieldDelegate>
@@ -22,6 +24,11 @@
 @property (strong, nonatomic) UIView *usernameTextFieldSeparator;
 @property (strong, nonatomic) UIImageView *tjLogoImageView;
 
+
+@property (nonatomic) Reachability *hostReachability;
+@property (nonatomic) Reachability *internetReachability;
+@property (nonatomic) Reachability *wifiReachability;
+
 @end
 
 @implementation AuthController
@@ -29,7 +36,6 @@
 #pragma mark - View lifecycle
 
 - (void)loadView {
-    [super loadView];
     
     self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.view.backgroundColor = [UIColor whiteColor];
@@ -58,6 +64,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [[self navigationController] setNavigationBarHidden:YES animated:YES];
+    
+    self.internetReachability = [Reachability reachabilityForInternetConnection];
+    [self.internetReachability startNotifier];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -87,10 +98,10 @@
     if (self.usernameTextField == textField && [textField.text length]) {
         
         [self startHandshake:textField.text];
-        ChatController *chatController = [[ChatController alloc] init];
+//        ChatController *chatController = [[ChatController alloc] init];
         
         UINavigationController *navigationController =
-        [[UINavigationController alloc] initWithRootViewController:chatController];
+        [[UINavigationController alloc] initWithRootViewController:[[MainTabBarViewController alloc] init]];
         
         [self presentViewController:navigationController
                            animated:YES
@@ -118,6 +129,19 @@
 
     [[Chat sharedClient] authenticateWithLoginData:loginData];
 }
+     
+- (void)reachabilityChanged:(NSNotification *)note
+{
+    Reachability* curReach = [note object];
+    NSParameterAssert([curReach isKindOfClass:[Reachability class]]);
+
+    UIAlertView* connectionAlertView = [[UIAlertView alloc] initWithTitle:@"Connection Warning" message:@"Connection Lost" delegate:self cancelButtonTitle:@"cancel" otherButtonTitles:nil, nil];
+    
+    NSLog(@"SHOW");
+    
+    [connectionAlertView show];
+}
+
 
 - (NSInteger)generateRandomFrom:(NSInteger)from to:(NSInteger)to {
     return (NSInteger)(arc4random() % (to-from+1) + from);

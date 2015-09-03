@@ -1,28 +1,30 @@
 //
-//  UserViewController.m
+//  MainTabBarViewController.m
 //  ChatApp
 //
-//  Created by Artemy Pestretsov on 8/24/15.
+//  Created by Artemy Pestretsov on 9/3/15.
 //  Copyright (c) 2015 Artemy Pestretsov. All rights reserved.
 //
 
-#import "UserViewController.h"
+#import "MainTabBarViewController.h"
+#import "ChatController.h"
 
-@interface UserViewController ()
+@interface MainTabBarViewController ()
 
 @end
 
-@implementation UserViewController
-
-- (void)loadView {
-    [super loadView];
-}
+@implementation MainTabBarViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     
+    UIViewController *chatController = [[ChatController alloc] init];
     
+    self.viewControllers = [[NSArray alloc] initWithObjects:chatController, nil];
 }
 
 - (void)didReceiveMemoryWarning {
